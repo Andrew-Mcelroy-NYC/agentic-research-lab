@@ -1,0 +1,17 @@
+# Python virtual environment
+.venv/
+
+# Python-generated files
+__pycache__/
+*.pyc
+
+# Secrets and API credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local model files
+*.gguf
+*.safetensors
