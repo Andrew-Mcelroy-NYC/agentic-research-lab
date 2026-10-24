@@ -36,26 +36,7 @@ if not results:
     print("No matching papers found.")
 
 def test_ai_connection():
-    response = chat(
-        model="qwen3:4b",
-        messages=[
-            {
-                "role": "user",
-                "content": "/no_think What is protein structure prediction? Answer in one sentence."
-            }
-        ],
-        think=False,
-        options={"temperature": 0}
-    )
-
-    print("\nQwen3 response:")
-    print(response.message.content)
-
-
-test_ai_connection()
-
-research_tools = [
-    {
+    research_tools = [{
         "type": "function",
         "function": {
             "name": "search_papers",
@@ -71,5 +52,45 @@ research_tools = [
                 "required": ["query"]
             }
         }
+    }]
+    messages = [
+    {
+        "role": "user",
+        "content": "Use the search_papers tool to find research papers about protein. List the titles you find."
     }
+]
+    response = chat(
+        model="qwen3:4b",
+        tools=research_tools,
+        messages=messages,
+        think=False,
+        options={"temperature": 0}
+    )
+    messages.append(response.message)
+    print("Tool requests:", response.message.tool_calls)
+    for tool_call in response.message.tool_calls or []:
+        if tool_call.function.name == "search_papers":
+            query = tool_call.function.arguments.get("query")
+
+            if isinstance(query, str) and query.strip():
+                papers = search_papers(query)
+                print("Tool results:", papers)
+                
+                messages.append({
+                    "role": "tool",
+                    "tool_name": "search_papers",
+                    "content": json.dumps(papers)
+                })
+            else:
+                print("Invalid search query")
+        else:
+            print("Blocked unauthorized tool:", tool_call.function.name)
+    print("\nQwen3 response:")
+    print(response.message.content)
+
+
+test_ai_connection()
+
+research_tools = [
+   
 ]
