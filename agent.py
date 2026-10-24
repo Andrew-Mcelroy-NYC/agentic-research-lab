@@ -35,7 +35,7 @@ for paper in results:
 if not results:
     print("No matching papers found.")
 
-def test_ai_connection():
+def test_ai_connection(query):
     research_tools = [{
         "type": "function",
         "function": {
@@ -56,7 +56,7 @@ def test_ai_connection():
     messages = [
     {
         "role": "user",
-        "content": "Use the search_papers tool to find research papers about protein. List the titles you find."
+        "content": f"Use the search_papers tool to find research papers about {query}. List the titles you find."
     }
 ]
     response = chat(
@@ -100,4 +100,4 @@ def test_ai_connection():
         print("Qwen3 did not request a tool.")
 
 
-test_ai_connection()
+test_ai_connection(query)
