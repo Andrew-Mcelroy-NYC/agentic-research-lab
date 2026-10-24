@@ -85,12 +85,19 @@ def test_ai_connection():
                 print("Invalid search query")
         else:
             print("Blocked unauthorized tool:", tool_call.function.name)
-    print("\nQwen3 response:")
-    print(response.message.content)
+
+    if response.message.tool_calls:
+        final_response = chat(
+            model="qwen3:4b",
+            messages=messages,
+            think=False,
+            options={"temperature": 0}
+        )
+
+        print("\nFinal research answer:")
+        print(final_response.message.content)
+    else:
+        print("Qwen3 did not request a tool.")
 
 
 test_ai_connection()
-
-research_tools = [
-   
-]
